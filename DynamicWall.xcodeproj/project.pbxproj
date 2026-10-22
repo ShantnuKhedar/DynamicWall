@@ -1,0 +1,274 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 56;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		03976A925ED745A7B08AEEC5 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 0FE54B56EA2AF179D69C4DB6 /* Assets.xcassets */; };
+		16A4628E037A739370AC8B8E /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = ED7A05ED10E707EF3EE59AFB /* PrivacyInfo.xcprivacy */; };
+		5CC8614DF677B39D93578D7E /* DynamicWall.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F17F16AB879C307B90994FF /* DynamicWall.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		0FE54B56EA2AF179D69C4DB6 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		60CF7BD53557F1AECA876078 /* DynamicWall.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = DynamicWall.entitlements; sourceTree = "<group>"; };
+		6F17F16AB879C307B90994FF /* DynamicWall.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DynamicWall.swift; sourceTree = "<group>"; };
+		ED7A05ED10E707EF3EE59AFB /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
+		F6B52F7BE4F51A8D5484DB86 /* DynamicWall.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = DynamicWall.app; sourceTree = BUILT_PRODUCTS_DIR; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		FE6BFC18A33293352879F2FA /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		52A06E0F93A2452D0A8DCCBA /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				F6B52F7BE4F51A8D5484DB86 /* DynamicWall.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		A93ED67520AFECFF0A74E827 = {
+			isa = PBXGroup;
+			children = (
+				B2857DD078D73858BB0AB083 /* DynamicWall */,
+				52A06E0F93A2452D0A8DCCBA /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		B2857DD078D73858BB0AB083 /* DynamicWall */ = {
+			isa = PBXGroup;
+			children = (
+				6F17F16AB879C307B90994FF /* DynamicWall.swift */,
+				0FE54B56EA2AF179D69C4DB6 /* Assets.xcassets */,
+				60CF7BD53557F1AECA876078 /* DynamicWall.entitlements */,
+				ED7A05ED10E707EF3EE59AFB /* PrivacyInfo.xcprivacy */,
+			);
+			path = DynamicWall;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		8EB903D010211F46F378D8C1 /* DynamicWall */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = E2C5AEFA6EBBD1360B8F01BE /* Build configuration list for PBXNativeTarget "DynamicWall" */;
+			buildPhases = (
+				AF362CDB88B11A6E120B38F1 /* Sources */,
+				FE6BFC18A33293352879F2FA /* Frameworks */,
+				3C22A18818DC8A194D38A66D /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = DynamicWall;
+			productName = DynamicWall;
+			productReference = F6B52F7BE4F51A8D5484DB86 /* DynamicWall.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		A7CE82518952997405756CFD /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = 1;
+				LastSwiftUpdateCheck = 1600;
+				LastUpgradeCheck = 1600;
+				TargetAttributes = {
+					8EB903D010211F46F378D8C1 = {
+						CreatedOnToolsVersion = 16.0;
+					};
+				};
+			};
+			buildConfigurationList = 94C470A693A893EFA35E7E0F /* Build configuration list for PBXProject "DynamicWall" */;
+			compatibilityVersion = "Xcode 14.0";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = A93ED67520AFECFF0A74E827;
+			productRefGroup = 52A06E0F93A2452D0A8DCCBA /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				8EB903D010211F46F378D8C1 /* DynamicWall */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		3C22A18818DC8A194D38A66D /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				03976A925ED745A7B08AEEC5 /* Assets.xcassets in Resources */,
+				16A4628E037A739370AC8B8E /* PrivacyInfo.xcprivacy in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		AF362CDB88B11A6E120B38F1 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				5CC8614DF677B39D93578D7E /* DynamicWall.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		03662972871E2E8ABE5275B4 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_NO_COMMON_BLOCKS = YES;
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				SDKROOT = macosx;
+				SWIFT_COMPILATION_MODE = wholemodule;
+			};
+			name = Release;
+		};
+		71B1A99912D53FE3DE15CB49 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = DynamicWall/DynamicWall.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 3;
+				DEVELOPMENT_TEAM = FAB527YNJ4;
+				ENABLE_HARDENED_RUNTIME = YES;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = DynamicWall;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
+				INFOPLIST_KEY_LSUIElement = YES;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "Copyright 2026 Shantanu Khedar. Pictures are copyright their respective owners.";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				MARKETING_VERSION = 1.2.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.shantanukhedar.dynamicwall;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Release;
+		};
+		72E466B9AD5BC06A5523382A /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = DynamicWall/DynamicWall.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 3;
+				DEVELOPMENT_TEAM = FAB527YNJ4;
+				ENABLE_HARDENED_RUNTIME = YES;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = DynamicWall;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
+				INFOPLIST_KEY_LSUIElement = YES;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "Copyright 2026 Shantanu Khedar. Pictures are copyright their respective owners.";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				MARKETING_VERSION = 1.2.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.shantanukhedar.dynamicwall;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Debug;
+		};
+		875D4D7DE9E72F5AA3C755B1 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = macosx;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		94C470A693A893EFA35E7E0F /* Build configuration list for PBXProject "DynamicWall" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				875D4D7DE9E72F5AA3C755B1 /* Debug */,
+				03662972871E2E8ABE5275B4 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		E2C5AEFA6EBBD1360B8F01BE /* Build configuration list for PBXNativeTarget "DynamicWall" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				72E466B9AD5BC06A5523382A /* Debug */,
+				71B1A99912D53FE3DE15CB49 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = A7CE82518952997405756CFD /* Project object */;
+}

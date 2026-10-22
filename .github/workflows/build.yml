@@ -1,0 +1,47 @@
+name: Build
+
+# Builds the app on every push and pull request.
+# Pushing a version tag (for example `git tag v1.2.0 && git push --tags`) also creates a
+# GitHub release with DynamicWall.zip attached.
+
+on:
+  push:
+    branches: [main]
+    tags: ["v*"]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: macos-latest
+    permissions:
+      contents: write   # needed only to create the release on tags
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Build (Release, universal, ad-hoc signed)
+        run: |
+          xcodebuild -project DynamicWall.xcodeproj -scheme DynamicWall -configuration Release \
+            -derivedDataPath build -destination 'generic/platform=macOS' \
+            CODE_SIGN_STYLE=Manual CODE_SIGN_IDENTITY=- DEVELOPMENT_TEAM= \
+            build
+
+      - name: Package
+        run: |
+          APP=build/Build/Products/Release/DynamicWall.app
+          codesign --verify --deep --strict "$APP"
+          lipo -archs "$APP/Contents/MacOS/DynamicWall"
+          ditto -c -k --keepParent "$APP" DynamicWall.zip
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: DynamicWall
+          path: DynamicWall.zip
+
+      - name: Create GitHub release
+        if: startsWith(github.ref, 'refs/tags/v')
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release create "$GITHUB_REF_NAME" DynamicWall.zip \
+            --title "DynamicWall $GITHUB_REF_NAME" --generate-notes
