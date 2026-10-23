@@ -685,8 +685,9 @@ final class Engine: ObservableObject {
         await fetchSpotlight()
         await apply(force: true)
     }
-
     private func regionChanged() async {
+        spotlight = []                    // forget pictures from the old region
+        spotHistoryData = Data()
         bingPinnedID = ""
         bingPinnedLatest = ""
         bing = []
