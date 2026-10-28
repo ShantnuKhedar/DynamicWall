@@ -34,7 +34,7 @@
 
 ## Install
 
-1. Download `DynamicWall.zip` from the [latest release](../../releases/latest).
+1. Download `DynamicWall.zip` from the [latest release](https://github.com/ShantnuKhedar/DynamicWall/releases/latest).
 2. Unzip it and drag **DynamicWall** into your **Applications** folder.
 3. Open it. If macOS says it can't verify the developer, open **System Settings → Privacy & Security**, scroll down and click **Open Anyway**.
 4. Click the DynamicWall icon in the menu bar to get started.
@@ -56,7 +56,7 @@ DynamicWall collects no data and has no analytics. It only connects, over HTTPS,
 
 ## How it works
 
-Bing pictures come from Bing's homepage picture feed, and Windows Spotlight pictures come from the same service Windows 11 uses. Both are public but undocumented, so Microsoft could change them at any time. If a source stops working, please [open an issue](../../issues).
+Bing pictures come from Bing's homepage picture feed, and Windows Spotlight pictures come from the same service Windows 11 uses. Both are public but undocumented, so Microsoft could change them at any time. If a source stops working, please [open an issue](https://github.com/ShantnuKhedar/DynamicWall/issues).
 
 ## Support
 
@@ -64,7 +64,7 @@ DynamicWall is free. If you enjoy it, you can [buy me a coffee through PayPal](h
 
 ## Feedback
 
-Found a bug or have an idea? [Open an issue](../../issues), or use **Settings › Feedback** in the app to email shanu.khedar.7@gmail.com.
+Found a bug or have an idea? [Open an issue](https://github.com/ShantnuKhedar/DynamicWall/issues), or use **Settings › Feedback** in the app to email shanu.khedar.7@gmail.com.
 
 ## Disclaimer
 

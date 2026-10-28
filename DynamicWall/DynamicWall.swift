@@ -547,6 +547,7 @@ final class Engine: ObservableObject {
     @Published var bing: [WallImage] = []        // last 8 days, newest first
     @Published var spotlight: [WallImage] = []   // recent Spotlight pictures, newest first
     @Published var current: WallImage?
+    @Published var preview: NSImage?             // small version for the menu, ready before it opens
     @Published var status = "Starting…"
     @Published var folders: [URL] = []
 
@@ -685,6 +686,7 @@ final class Engine: ObservableObject {
         await fetchSpotlight()
         await apply(force: true)
     }
+
     private func regionChanged() async {
         spotlight = []                    // forget pictures from the old region
         spotHistoryData = Data()
@@ -1022,6 +1024,7 @@ final class Engine: ObservableObject {
         cleanUp(keeping: Set(files.values))
         applied = files
         current = img
+        preview = await Task.detached(priority: .utility) { Img.thumbnail(fallback, maxPixel: 700) }.value
         currentData = (try? JSONEncoder().encode(img)) ?? Data()
         status = img.title
         return true
@@ -1205,7 +1208,7 @@ struct WindowHook: NSViewRepresentable {
 enum Feedback {
     static let address = "shanu.khedar.7@gmail.com"
     /// Your GitHub repository, once it exists, e.g. URL(string: "https://github.com/yourname/DynamicWall").
-    static let repoURL: URL? = nil
+    static let repoURL: URL? = URL(string: "https://github.com/ShantnuKhedar/DynamicWall")
 
     enum Kind: String, CaseIterable, Identifiable {
         case idea = "Suggestion", bug = "Bug report", question = "Question", other = "Other"
@@ -1376,14 +1379,22 @@ struct SupportView: View {
 struct Thumb: View {
     let img: WallImage
     var folders: [URL] = []
+    var height: CGFloat = 124
+    var preloaded: NSImage? = nil
     @State private var image: NSImage?
 
     var body: some View {
+        // A fixed height: macOS 27 menu bar windows collapse views that only have an aspect ratio.
         Rectangle().fill(.quaternary)
-            .aspectRatio(16/9, contentMode: .fit)
-            .overlay { if let image { Image(nsImage: image).resizable().aspectRatio(contentMode: .fill) } }
+            .frame(maxWidth: .infinity)
+            .frame(height: height)
+            .overlay {
+                if let shown = preloaded ?? image {
+                    Image(nsImage: shown).resizable().aspectRatio(contentMode: .fill)
+                }
+            }
             .clipShape(RoundedRectangle(cornerRadius: 8))
-            .task(id: img.id) { image = await load() }
+            .task(id: img.id) { if preloaded == nil { image = await load() } }
     }
 
     private func load() async -> NSImage? {
@@ -1425,7 +1436,7 @@ struct MenuView: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 10) {
             if let img = e.current {
-                Thumb(img: img, folders: e.folders)
+                Thumb(img: img, folders: e.folders, height: 170, preloaded: e.preview)
                 Text(img.title).font(.headline).lineLimit(2)
                 if !img.copyright.isEmpty {
                     Text(img.copyright).font(.caption).foregroundStyle(.secondary).lineLimit(3)

@@ -9,7 +9,7 @@
    git add .
    git commit -m "DynamicWall 1.2.0"
    git branch -M main
-   git remote add origin https://github.com/YOUR-USERNAME/DynamicWall.git
+   git remote add origin https://github.com/ShantnuKhedar/DynamicWall.git
    git push -u origin main
    ```
    (Or use GitHub Desktop: File → Add Local Repository → Publish.)
