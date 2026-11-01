@@ -27,10 +27,13 @@
 
 ## Screenshots
 
-<!-- Add screenshots to the docs folder and show them here, for example:
-![Menu](docs/menu.png)
-![Settings](docs/settings.png)
--->
+<p align="center">
+  <img src="docs/screenshot-bing.png" width="49%" alt="DynamicWall menu with the daily Bing picture">
+  <img src="docs/screenshot-spotlight.png" width="49%" alt="DynamicWall menu with a Windows Spotlight picture">
+</p>
+<p align="center">
+  <img src="docs/screenshot-avebury.png" width="70%" alt="Browsing earlier Bing pictures with Previous and Next">
+</p>
 
 ## Install
 
