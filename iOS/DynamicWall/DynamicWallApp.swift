@@ -41,10 +41,10 @@ final class Library: ObservableObject {
     @Published var spotlightPool: [WallImage] = []   // everything fetched from Spotlight (gallery)
     @Published var favorites: [WallImage] = []
     @Published var index = 0                         // position in the current list (0 = newest)
-    @Published var image: UIImage?                   // the wallpaper preview (already cropped)
     @Published var currentFile: URL?                 // the cropped 4K wallpaper file
     @Published var loading = false
     @Published var message: String?
+    @Published var cropVersion = 0                 // bumps when a crop changes, so pages redraw
 
     private var skipReload = false
     private var loadedDay = ""
@@ -60,6 +60,17 @@ final class Library: ObservableObject {
     var canGoBack: Bool { index + 1 < list.count }
     var canGoForward: Bool { source == .spotlight || index > 0 }   // Spotlight: Next fetches a new one
     var isFavorite: Bool { current.map { c in favorites.contains { $0.id == c.id } } ?? false }
+
+    /// Pages for swiping, oldest on the left and newest on the right (like Photos).
+    var pages: [WallImage] { Array(list.reversed()) }
+    var isLatest: Bool { index == 0 }
+    var latestName: String { source == .bing ? "Today" : "Latest" }
+
+    /// "Bing · Oct 29" / "Windows Spotlight" — shown above the title.
+    var caption: String {
+        guard let c = current else { return "" }
+        return c.source == .bing ? "Bing · \(Day.label(c.day))" : "Windows Spotlight"
+    }
 
     var positionLabel: String {
         guard let c = current else { return "" }
@@ -123,6 +134,20 @@ final class Library: ObservableObject {
 
     // MARK: Previous / Next
 
+    /// Called when a swipe lands on a picture.
+    func select(id: String) async {
+        guard let i = list.firstIndex(where: { $0.id == id }), i != index else { return }
+        index = i
+        await loadImage()
+    }
+
+    /// Jumps straight back to the newest picture.
+    func goLatest() async {
+        guard index != 0 else { return }
+        index = 0
+        await loadImage()
+    }
+
     func previous() async {
         guard canGoBack else { return }
         index += 1
@@ -169,21 +194,13 @@ final class Library: ObservableObject {
 
     func loadImage() async {
         guard let img = current else {
-            image = nil
             currentFile = nil
             loading = false
             return
         }
         loading = true
         let file = await WallpaperService.shared.wallpaper(for: img)
-        let ui: UIImage?
-        if let file {
-            ui = await Task.detached(priority: .userInitiated) { Img.downsample(file, maxPixel: 2700) }.value
-        } else {
-            ui = nil
-        }
         guard current?.id == img.id else { return }      // you moved on while it loaded
-        image = ui
         currentFile = file
         loading = false
         viewData = (try? JSONEncoder().encode(img)) ?? Data()
@@ -203,6 +220,7 @@ final class Library: ObservableObject {
 
     func saveCrop(_ r: CGRect, for img: WallImage) async {
         await WallpaperService.shared.setCrop(r, for: img.id)
+        cropVersion += 1
         await loadImage()
     }
 
@@ -307,33 +325,44 @@ struct TodayView: View {
     @State private var showSetup = false
     @State private var showPanel = true
     @State private var editing: WallImage?
+    @State private var scrolledID: String?
+    @State private var target: String?              // where a button-driven scroll is heading
 
     var body: some View {
         ZStack {
-            GeometryReader { geo in
-                Group {
-                    if let img = lib.image {
-                        Image(uiImage: img).resizable().scaledToFill()
-                    } else {
-                        LinearGradient(colors: [.indigo, .purple, .orange], startPoint: .top, endPoint: .bottom)
+            // Swipe like the Photos app: pictures follow your finger and snap into place.
+            ScrollView(.horizontal, showsIndicators: false) {
+                LazyHStack(spacing: 0) {
+                    ForEach(lib.pages) { img in
+                        WallPage(img: img, version: lib.cropVersion)
+                            .containerRelativeFrame([.horizontal, .vertical])
+                            .id(img.id)
                     }
                 }
-                .frame(width: geo.size.width, height: geo.size.height)
-                .clipped()
+                .scrollTargetLayout()
             }
+            .scrollTargetBehavior(.paging)
+            .scrollPosition(id: $scrolledID)
+            .defaultScrollAnchor(.trailing)                  // newest is on the right
             .ignoresSafeArea()
-            .contentShape(Rectangle())
+            .background(Color.black)
             .onTapGesture { withAnimation(.easeInOut(duration: 0.25)) { showPanel.toggle() } }
-            // Swipe left for the next picture, right for the previous one.
-            .gesture(
-                DragGesture(minimumDistance: 30).onEnded { v in
-                    let dx = v.translation.width, dy = v.translation.height
-                    guard abs(dx) > 60, abs(dx) > abs(dy) else { return }
-                    Task {
-                        if dx < 0 { await lib.next() } else { await lib.previous() }
-                    }
-                }
-            )
+            .onChange(of: scrolledID) { _, id in
+                guard let id, id != lib.current?.id else { return }
+                if let t = target { if id == t { target = nil }; return }   // ignore pages passed on the way
+                Task { await lib.select(id: id) }
+            }
+            .onChange(of: lib.current?.id) { _, id in
+                guard let id, id != scrolledID else { return }
+                target = id
+                withAnimation(.snappy) { scrolledID = id }
+            }
+            // A new list (first load, another source): jump straight to the right picture.
+            .onChange(of: lib.pages.map(\.id)) { _, _ in
+                target = nil
+                scrolledID = lib.current?.id
+            }
+            .onAppear { scrolledID = lib.current?.id }
 
             if showPanel {
                 VStack {
@@ -384,6 +413,9 @@ struct TodayView: View {
         VStack(alignment: .leading, spacing: 12) {
             HStack(alignment: .top) {
                 VStack(alignment: .leading, spacing: 4) {
+                    if !lib.caption.isEmpty {
+                        Text(lib.caption).font(.caption2.weight(.semibold)).textCase(.uppercase).foregroundStyle(.secondary)
+                    }
                     Text(lib.current?.title ?? (lib.loading ? "Loading…" : "No picture yet"))
                         .font(.headline)
                         .lineLimit(2)
@@ -401,7 +433,17 @@ struct TodayView: View {
                 }
                 .disabled(!lib.canGoBack)
                 Spacer()
-                Text(lib.positionLabel).font(.caption.weight(.semibold)).foregroundStyle(.secondary)
+                if lib.isLatest {
+                    Text(lib.latestName).font(.caption.weight(.semibold)).foregroundStyle(.secondary)
+                } else {
+                    // Back in time: one tap returns to the newest picture.
+                    Button { Task { await lib.goLatest() } } label: {
+                        Label(lib.latestName, systemImage: "arrow.uturn.forward")
+                            .font(.caption.weight(.semibold))
+                    }
+                    .buttonStyle(.borderless)
+                    .tint(.accentColor)
+                }
                 Spacer()
                 Button { Task { await lib.next() } } label: {
                     HStack(spacing: 4) { Text("Next"); Image(systemName: "chevron.right") }
@@ -457,6 +499,56 @@ struct TodayView: View {
     }
 }
 
+// MARK: - Swipe pages
+
+/// Keeps the last few full-screen pictures ready, so swiping back and forth is instant.
+enum PageCache {
+    static let cache: NSCache<NSString, UIImage> = {
+        let c = NSCache<NSString, UIImage>()
+        c.countLimit = 6
+        return c
+    }()
+
+    static func load(_ img: WallImage, version: Int) async -> UIImage? {
+        let key = "\(img.id)#\(version)" as NSString
+        if let c = cache.object(forKey: key) { return c }
+        guard let file = await WallpaperService.shared.wallpaper(for: img) else { return nil }
+        let ui = await Task.detached(priority: .userInitiated) { Img.downsample(file, maxPixel: 2000) }.value
+        if let ui { cache.setObject(ui, forKey: key) }
+        return ui
+    }
+}
+
+/// One full-screen picture in the swipeable row.
+struct WallPage: View {
+    let img: WallImage
+    let version: Int
+    @State private var ui: UIImage?
+
+    var body: some View {
+        GeometryReader { geo in
+            ZStack {
+                Color.black
+                if let ui {
+                    Image(uiImage: ui)
+                        .resizable()
+                        .scaledToFill()
+                        .frame(width: geo.size.width, height: geo.size.height)
+                        .clipped()
+                        .transition(.opacity)
+                } else {
+                    ProgressView().tint(.white)
+                }
+            }
+        }
+        .onDisappear { ui = nil }                        // PageCache keeps recent ones instant
+        .task(id: "\(img.id)#\(version)") {
+            let loaded = await PageCache.load(img, version: version)
+            withAnimation(.easeOut(duration: 0.2)) { ui = loaded }
+        }
+    }
+}
+
 // MARK: - Zoom & Select
 
 /// Pinch and drag the 4K picture inside a frame shaped like your screen, with a clock preview.
@@ -483,18 +575,33 @@ struct CropEditor: View {
                 let fs = frameFor(geo.size)
                 ZStack {
                     Color.black
-                    if let picture {
-                        let s = scale(fs)
-                        Image(uiImage: picture)
-                            .resizable()
-                            .frame(width: pixel.width * s, height: pixel.height * s)
-                            .offset(offset)
-                    } else {
-                        ProgressView().tint(.white)
+                    // The picture layer is pinned to the screen size, however far you zoom.
+                    ZStack {
+                        if let picture {
+                            let s = scale(fs)
+                            Image(uiImage: picture)
+                                .resizable()
+                                .frame(width: pixel.width * s, height: pixel.height * s)
+                                .offset(offset)
+                        } else {
+                            ProgressView().tint(.white)
+                        }
                     }
-                    HoleShape(hole: CGRect(x: (geo.size.width - fs.width) / 2, y: (geo.size.height - fs.height) / 2,
-                                           width: fs.width, height: fs.height))
-                        .fill(Color.black.opacity(0.6), style: FillStyle(eoFill: true))
+                    .frame(width: geo.size.width, height: geo.size.height)
+                    .clipped()
+                    // Dim everything outside the phone frame; the frame itself stays bright.
+                    Rectangle()
+                        .fill(Color.black.opacity(0.6))
+                        .frame(width: geo.size.width, height: geo.size.height)
+                        .mask {
+                            Rectangle()
+                                .overlay {
+                                    RoundedRectangle(cornerRadius: fs.width * 0.12)
+                                        .frame(width: fs.width, height: fs.height)
+                                        .blendMode(.destinationOut)
+                                }
+                                .compositingGroup()
+                        }
                         .allowsHitTesting(false)
                     RoundedRectangle(cornerRadius: fs.width * 0.12)
                         .stroke(Color.white.opacity(0.8), lineWidth: 1)
@@ -627,17 +734,6 @@ struct CropEditor: View {
         offset = clamp(CGSize(width: (pixel.width / 2 - r.midX * pixel.width) * s,
                               height: (pixel.height / 2 - r.midY * pixel.height) * s), fs)
         baseOffset = offset
-    }
-}
-
-/// A full-screen rectangle with a rounded hole (dims everything outside the frame).
-struct HoleShape: Shape {
-    var hole: CGRect
-    func path(in rect: CGRect) -> Path {
-        var p = Path()
-        p.addRect(rect)
-        p.addRoundedRect(in: hole, cornerSize: CGSize(width: hole.width * 0.12, height: hole.width * 0.12))
-        return p
     }
 }
 
